@@ -2,54 +2,71 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 int main(void) {
-	
-	FILE *stream;
-	fopen("data.csv", "r");
-  if(stream==NULL){
+    FILE *stream = fopen("data.csv", "r");
+    if (stream == NULL) {
+        perror("erro ao abrir o arquivo");
+        return -1;
+    }
+
+    int i = 0;
+    int *price = (int *)malloc(512 * sizeof(int));
+    char *author[512];
+    char *title[512];
+    char text[2048];
+
+    if (price == NULL) {
+        fclose(stream);
+        puts("erro ao alocar memória");
+        return -1;
+    }
+
+    fgets(text, 2048, stream); // ignora cabeçalho
+    while (fgets(text, 2048, stream) != NULL) {
+        char *parser = strtok(text, ",");
+        author[i] = strdup(parser);
+
+        parser = strtok(NULL, ",");
+        title[i] = strdup(parser);
+
+        parser = strtok(NULL, "\n");
+        price[i] = atoi(parser);
+        i++;
+    }
+#ifdef DEBUG
+    for(int count=0;count<i;count++){
+    printf("%s,%s,%d\n",author[count],title[count],price[count]);
+  } 
+  
+#endif
+
+    int option = 0;
+    printf("||0- sair do programa||\n||1--ordenar por titulo||\n||2--ordenar por autor||\n||3--ordenar por preco||\n");
+    scanf("%d", &option);
+
+    switch (option) {
+        case 0:
+            break;
+        case 1:
+            // TODO: ordenar por título
+            break;
+        case 2:
+            // TODO: ordenar por autor
+            break;
+        case 3:
+            // TODO: ordenar por preço
+            break;
+        default:
+            puts("erro: opcao invalida");
+            break;
+    }
+
     fclose(stream);
-    return -1;
-  }
+    for (int j = 0; j < i; j++) {
+        free(author[j]);
+        free(title[j]);
+    }
+    free(price);
 
-  float *price=(float*)malloc(sizeof(stream));
-  if(price==NULL){
-    puts("erro no alocamento");
-    return -1;
-  }
-
-  char* authors=(char*)malloc(sizeof(stream));
-  if(authors==NULL){
-    puts("erro no alocamento");
-    return -1;
-  }
-
-  char* titles=(char*)malloc(sizeof(stream));
-  if(titles==NULL){
-    puts("error no alocamento");
-    return -1;
-  }
- //teste 	
-  char text[sizeof(stream)];
-  while(fgets(text, sizeof(text),stream) != NULL){
-    printf("%s",text);
-  }
-
-  int option;
-  printf("1--ordenar por titulo 2--ordenar por autor 3--ordenar por preco");
-  fflush(stdin);
-  switch(option){
-    case 1:
-       //funcao de ordenar por titulo aqui
-    case 2:
-      //funcao de ordenar por autor
-    case 3:
-      //funcao ordenar por preco
-  }
-	
-	fclose(stream);
-  free(price);
-  free(authors);
-  free(titles);
-	return 0;
+    return 0;
 }
