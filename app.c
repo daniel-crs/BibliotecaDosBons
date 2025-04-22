@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "archive_function.h"
+
 
 int main(void) {
     FILE *stream = fopen("data.csv", "r");
@@ -37,7 +39,6 @@ int main(void) {
     for(int count=0;count<i;count++){
     printf("%s,%s,%d\n",author[count],title[count],price[count]);
   } 
-  
 #endif
 
     int option = 0;
@@ -49,9 +50,13 @@ int main(void) {
             break;
         case 1:
             // TODO: ordenar por título
+            order_string(title,author,price,i);
+            produce_new_archive(title,author,price,i); 
             break;
         case 2:
             // TODO: ordenar por autor
+            order_string(author,title,price,i);
+            produce_new_archive(title,author,price,i);
             break;
         case 3:
             // TODO: ordenar por preço
@@ -61,31 +66,10 @@ int main(void) {
             break;
     }
     fclose(stream);
-
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF); 
-
-    char name_A[20];
-
-    puts("digite o nome do arquivo");
-    fgets(name_A,20,stdin);
-
-    name_A[strcspn(name_A, "\n")] = 0;
-    strcat(name_A,".csv");
-
-    FILE *streamW=fopen(name_A,"w");
-    if(streamW==NULL){
-    perror("erro ao criar novo arquivo\n");
-  }
-    fputs("title,author,price",streamW);
-    for(int j=0;j<i;j++){
-    fprintf(streamW,"%s,%s,%d\n",author[j],title[j],price[j]);
-  }
     for (int j = 0; j < i; j++) {
         free(author[j]);
         free(title[j]);
     }
     free(price);
-    fclose(streamW);
     return 0;
 }
