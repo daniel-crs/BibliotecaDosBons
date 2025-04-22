@@ -24,12 +24,12 @@ int main(void) {
     fgets(text, 2048, stream); // ignora cabeçalho
     while (fgets(text, 2048, stream) != NULL) {
         char *parser = strtok(text, ",");
-        author[i] = strdup(parser);
-
-        parser = strtok(NULL, ",");
         title[i] = strdup(parser);
 
-        parser = strtok(NULL, "\n");
+        parser = strtok(NULL, ",");
+        author[i] = strdup(parser);
+
+        parser = strtok(NULL, "\r\n");
         price[i] = atoi(parser);
         i++;
     }
@@ -60,13 +60,32 @@ int main(void) {
             puts("erro: opcao invalida");
             break;
     }
-
     fclose(stream);
+
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); 
+
+    char name_A[20];
+
+    puts("digite o nome do arquivo");
+    fgets(name_A,20,stdin);
+
+    name_A[strcspn(name_A, "\n")] = 0;
+    strcat(name_A,".csv");
+
+    FILE *streamW=fopen(name_A,"w");
+    if(streamW==NULL){
+    perror("erro ao criar novo arquivo\n");
+  }
+    fputs("title,author,price",streamW);
+    for(int j=0;j<i;j++){
+    fprintf(streamW,"%s,%s,%d\n",author[j],title[j],price[j]);
+  }
     for (int j = 0; j < i; j++) {
         free(author[j]);
         free(title[j]);
     }
     free(price);
-
+    fclose(streamW);
     return 0;
 }
