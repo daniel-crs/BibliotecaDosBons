@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "archive_function.h"
+#include "order.h"
 
 
 int main(void) {
@@ -24,7 +23,7 @@ int main(void) {
         return -1;
     }
 
-    fgets(text, 2048, stream); // ignora cabeçalho
+    fgets(text, 2048, stream); 
     while (fgets(text, 2048, stream) != NULL) {
         char *parser = strtok(text, ",");
         title[i] = strdup(parser);
@@ -36,37 +35,40 @@ int main(void) {
         price[i] = atoi(parser);
         i++;
     }
+    fclose(stream);
+  
 #ifdef DEBUG
     for(int count=0;count<i;count++){
     printf("%s,%s,%d\n",author[count],title[count],price[count]);
   } 
 #endif
 
+    while(1){
     int option = 0;
     printf("||0- sair do programa||\n||1--ordenar por titulo||\n||2--ordenar por autor||\n||3--ordenar por preco||\n");
     scanf("%d", &option);
 
+    if(option==0){
+      break;
+    }
+
     switch (option) {
-        case 0:
-            break;
         case 1:
-            // TODO: ordenar por título
             order_string(title,author,price,i);
             produce_new_archive(title,author,price,i); 
             break;
         case 2:
-            // TODO: ordenar por autor
             order_string(author,title,price,i);
             produce_new_archive(title,author,price,i);
             break;
         case 3:
-            // TODO: ordenar por preço
+            produce_new_archive(title,author,price,i);
             break;
         default:
             puts("erro: opcao invalida");
             break;
     }
-    fclose(stream);
+  }
     for (int j = 0; j < i; j++) {
         free(author[j]);
         free(title[j]);
