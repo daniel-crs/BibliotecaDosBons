@@ -12,7 +12,7 @@ int main(void) {
     }
 
     int i = 0;
-    int *price = (int *)malloc(512 * sizeof(int));
+    int *price = (int*)malloc(512 * sizeof(int));
     char *author[512];
     char *title[512];
     char text[2048];
@@ -54,22 +54,25 @@ int main(void) {
 
     switch (option) {
         case 1:
-            order_string(title,author,price,i);
-            produce_new_archive(title,author,price,i); 
+            order_string(title, author, price, i);
+            produce_new_archive(title, author, price, i); 
             break;
         case 2:
-            order_string(author,title,price,i);
-            produce_new_archive(title,author,price,i);
+            order_string(author, title, price, i);
+            produce_new_archive(title, author, price, i);
             break;
         case 3:
-            produce_new_archive(title,author,price,i);
+        	order_price(price, title, author, i);
+            produce_new_archive(title, author, price, i);
             break;
         default:
             puts("erro: opcao invalida");
             break;
     }
   }
-    for (int j = 0; j < i; j++) {
+  	int j;
+  
+    for (j = 0; j < i; j++) {
         free(author[j]);
         free(title[j]);
     }
